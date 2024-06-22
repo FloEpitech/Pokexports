@@ -1,4 +1,5 @@
 class PokemonsController < ApplicationController
+  require 'csv'
   require 'httparty'
 
   def index
@@ -36,15 +37,20 @@ class PokemonsController < ApplicationController
   def generate_csv(pokemons)
     CSV.generate(col_sep: ';') do |csv|
       csv << ["Pokedex ID", "Nom en Français", "Sprite Regular", "Sprite Shiny", "Types", "Évolutions"]
+
       pokemons.each do |pokemon|
-        csv << [
-          pokemon["pokedex_id"] || "N/A",
-          (pokemon["name"] && pokemon["name"]["fr"]) || "N/A",
-          (pokemon["sprites"] && pokemon["sprites"]["regular"]) || "N/A",
-          (pokemon["sprites"] && pokemon["sprites"]["shiny"]) || "N/A",
-          (pokemon["types"] || []).map { |type| type["name"] }.join(","),
-          (pokemon["evolution"] && pokemon["evolution"]["next"] || []).map { |evo| evo["pokedex_id"] }.join(",")
-        ]
+        pokedex_id = pokemon["pokedex_id"] || "N/A"
+        name_fr = pokemon["name"]["fr"] || "N/A"
+        sprite_regular = pokemon["sprites"]["regular"] || "N/A"
+        sprite_shiny = pokemon["sprites"]["shiny"] || "N/A"
+        types = (pokemon["types"] || []).map { |type| type["name"] }.join(",")
+
+        evolutions = ""
+        if pokemon["evolution"] && pokemon["evolution"]["next"]
+          evolutions = pokemon["evolution"]["next"].select { |evo| evo["generation"] == 1 }.map { |evo| evo["pokedex_id"] }.join(",")
+        end
+
+        csv << [pokedex_id, name_fr, sprite_regular, sprite_shiny, types, evolutions]
       end
     end
   end

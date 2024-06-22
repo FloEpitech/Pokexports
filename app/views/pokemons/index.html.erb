@@ -1,29 +1,39 @@
-<h1>Liste des Pokémon de la première génération</h1>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pokémon Export</title>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= javascript_importmap_tags %>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="path/to/your/logo.png" alt="Logo" class="logo">
+      <h1>Liste des Pokémon de la première génération</h1>
+    </div>
 
-<%= form_with url: export_pokemons_path, method: :post do %>
-  <table>
-    <thead>
-      <tr>
-        <th>Sélectionner</th>
-        <th>ID</th>
-        <th>Nom</th>
-        <th>Sprite</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @pokemons.each do |pokemon| %>
-        <tr>
-          <td><%= check_box_tag 'pokemons[]', pokemon['pokedex_id'] %></td>
-          <td><%= pokemon['pokedex_id'] %></td>
-          <td><%= pokemon['name']['fr'] %></td>
-          <td><img src="<%= pokemon['sprites']['regular'] %>" alt="<%= pokemon['name']['fr'] %>"></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <%= submit_tag "Exporter en CSV" %>
-<% end %>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Rechercher un Pokémon...">
+      <ul id="suggestions" class="suggestions" style="display: none;"></ul>
+    </div>
 
-<% if @pokemons.empty? %>
-  <p>Aucun Pokémon trouvé.</p>
-<% end %>
+    <%= form_with url: export_pokemons_path(format: :csv), method: :post do %>
+      <div class="pokemon-grid">
+        <% @pokemons.each do |pokemon| %>
+          <div class="pokemon-card" data-pokemon-name="<%= pokemon['name']['fr'].downcase %>" id="pokemon-<%= pokemon['pokedex_id'] %>">
+            <%= check_box_tag 'pokemons[]', pokemon['pokedex_id'] %>
+            <p><strong>ID:</strong> <%= pokemon['pokedex_id'] %></p>
+            <p><strong>Nom:</strong> <%= pokemon['name']['fr'] %></p>
+            <img src="<%= pokemon['sprites']['regular'] %>" alt="<%= pokemon['name']['fr'] %>">
+          </div>
+        <% end %>
+      </div>
+      <%= button_tag "Exporter en CSV", type: :submit, class: "button" %>
+    <% end %>
+
+    <% if @pokemons.empty? %>
+      <p>Aucun Pokémon trouvé.</p>
+    <% end %>
+  </div>
+</body>
+</html>
