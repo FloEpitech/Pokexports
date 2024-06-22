@@ -1,0 +1,29 @@
+<h1>Liste des Pokémon de la première génération</h1>
+
+<%= form_with url: export_pokemons_path, method: :post do %>
+  <table>
+    <thead>
+      <tr>
+        <th>Sélectionner</th>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Sprite</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @pokemons.each do |pokemon| %>
+        <tr>
+          <td><%= check_box_tag 'pokemons[]', pokemon['pokedex_id'] %></td>
+          <td><%= pokemon['pokedex_id'] %></td>
+          <td><%= pokemon['name']['fr'] %></td>
+          <td><img src="<%= pokemon['sprites']['regular'] %>" alt="<%= pokemon['name']['fr'] %>"></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= submit_tag "Exporter en CSV" %>
+<% end %>
+
+<% if @pokemons.empty? %>
+  <p>Aucun Pokémon trouvé.</p>
+<% end %>
