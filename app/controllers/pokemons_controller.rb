@@ -47,7 +47,7 @@ class PokemonsController < ApplicationController
 
         evolutions = ""
         if pokemon["evolution"] && pokemon["evolution"]["next"]
-          evolutions = pokemon["evolution"]["next"].select { |evo| evo["generation"] == 1 }.map { |evo| evo["pokedex_id"] }.join(",")
+          evolutions = pokemon["evolution"]["next"].map { |evo| evo["pokedex_id"] }.join(",")
         end
 
         csv << [pokedex_id, name_fr, sprite_regular, sprite_shiny, types, evolutions]

@@ -6,12 +6,12 @@
   <%= javascript_importmap_tags %>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <img src="path/to/your/logo.png" alt="Logo" class="logo">
-      <h1>Liste des Pokémon de la première génération</h1>
-    </div>
+  <div class="header">
+    <%= image_tag 'logo.png', alt: 'Logo', class: 'logo' %>
+    <h1>POKEXPORTS</h1>
+  </div>
 
+  <div class="container">
     <div class="search-bar">
       <input type="text" id="search-input" placeholder="Rechercher un Pokémon...">
       <ul id="suggestions" class="suggestions" style="display: none;"></ul>
